@@ -127,12 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boss.cpp" />
     <ClCompile Include="employee.cpp" />
+    <ClCompile Include="manager.cpp" />
     <ClCompile Include="WorkerManager.cpp" />
     <ClCompile Include="职工管理系统.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="boss.h" />
     <ClInclude Include="employee.h" />
+    <ClInclude Include="manager.h" />
     <ClInclude Include="worker.h" />
     <ClInclude Include="workerManager.h" />
   </ItemGroup>

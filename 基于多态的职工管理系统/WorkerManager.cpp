@@ -2,9 +2,45 @@
 
 WorkerManager::WorkerManager()
 {
-	//初始化属性
-	this->m_EmpNum = 0;
-	this->m_EmpArray = NULL;
+	//1.文件不存在
+	ifstream ifs;
+	ifs.open(FILENAME, ios::in);
+	if (!ifs.is_open())
+	{
+		cout << "文件不存在" << endl;
+		//初始化属性
+		this->m_EmpNum = 0;
+		this->m_EmpArray = NULL;
+		this->m_FileIsEmpty = true;
+		ifs.close();
+		return;
+	}
+	//2.文件存在，但是内容为空
+	char ch;
+	ifs >> ch;
+	if (ifs.eof())
+	{
+		cout << "文件内容为空" << endl;
+		//初始化属性
+		this->m_EmpNum = 0;
+		this->m_EmpArray = NULL;
+		this->m_FileIsEmpty = true;
+		ifs.close();
+		return;
+	}
+	//3.文件存在，且内容不为空
+	int num = this->get_EmpNum();
+	cout << "职工人数为：" << num << endl;
+	this->m_EmpNum = num;
+	this->m_EmpArray = new Worker * [this->m_EmpNum];
+	this->init_Emp();
+
+	//for (int i = 0;i < this->m_EmpNum;i++)
+	//{
+	//	cout << "职工编号：" << this->m_EmpArray[i]->m_Id
+	//		<< "姓名：" << this->m_EmpArray[i]->m_Name
+	//		<< "部门：" << this->m_EmpArray[i]->m_DeptId << endl;
+	//}
 }
 void WorkerManager::Show_Menu()
 {
@@ -88,6 +124,8 @@ void WorkerManager::Add_Emp()
 		this->m_EmpArray = newSpace;
 		//更新新的职工的人数
 		this->m_EmpNum = newSize;
+		//更新职工不为空的标志
+		this->m_FileIsEmpty = false;
 		cout << "成功添加" << addNum << "名新职工" << endl;
 		//保存数据到文件中
 		this->save();
@@ -110,6 +148,54 @@ void WorkerManager::save()
 			<< this->m_EmpArray[i]->m_DeptId << endl;
 	}
 	ofs.close();
+}
+
+int WorkerManager::get_EmpNum()
+{
+	ifstream ifs;
+	ifs.open(FILENAME, ios::in);
+
+	int id;
+	string name;
+	int dId;
+
+	int num = 0;
+	while (ifs >> id && ifs >> name && ifs >> dId)
+	{
+		num++;
+	}
+	return num;
+}
+
+void WorkerManager::init_Emp()
+{
+	ifstream ifs;
+	ifs.open(FILENAME, ios::in);
+
+	int id;
+	string name;
+	int dId;
+
+	int index = 0;
+	while (ifs >> id && ifs >> name && ifs >> dId)
+	{
+		Worker* worker = NULL;
+		if (dId == 1)
+		{
+			worker = new Employee(id, name, dId);
+		}
+		else if (dId == 2)
+		{
+			worker = new Manager(id, name, dId);
+		}
+		else
+		{
+			worker = new Boss(id, name, dId);
+		}
+		this->m_EmpArray[index] = worker;
+		index++;
+	}
+	ifs.close();
 }
 
 WorkerManager::~WorkerManager()

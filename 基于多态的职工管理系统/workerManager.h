@@ -30,6 +30,15 @@ public:
 	//保存文件
 	void save();
 
+	//判断文件是否为空的标志
+	bool m_FileIsEmpty;
+
+	//统计文件中的人数
+	int get_EmpNum();
+
+	//初始化员工的
+	void init_Emp();
+
 	//析构函数
 	~WorkerManager();
 };
